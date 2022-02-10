@@ -69,11 +69,11 @@ public class Launcher {
         java.util.ArrayList<String> kl = new java.util.ArrayList<String>();
 
 
-        for (int i = 0; i < words.length; ++i)
+        for (String word : words)
         {
-            if (!words[i].isBlank())
+            if (!word.isBlank())
             {
-                kl.add(words[i]);
+                kl.add(word);
             }
         }
 
@@ -119,8 +119,8 @@ public class Launcher {
         int second = secondo(res, first);
         int third = thirdo(res, first, second);
 
-        String[] array = {strtemp.get(first), strtemp.get(second), strtemp.get(third)};
-        return array;
+        String[] result = {strtemp.get(first), strtemp.get(second), strtemp.get(third)};
+        return result;
 
     }
 
