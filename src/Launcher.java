@@ -25,6 +25,17 @@ public class Launcher {
         contenu = contenu.replaceAll("[^a-zA-Z ]", " ");
         String[] word = contenu.split(" ");
 
+        java.util.ArrayList<String> kl = new java.util.ArrayList<String>();
+
+
+        for (int i = 0; i < word.length; ++i)
+        {
+            if (!word[i].isBlank())
+            {
+                kl.add(word[i]);
+            }
+        }
+
         String result = "";
         int max = 0;
         int count = 0;
@@ -32,46 +43,46 @@ public class Launcher {
         String maxx = "";
         String third = "";
 
-        for (int i = 0; i < word.length; ++i)
+        for (int i = 0; i < kl.size(); ++i)
         {
-            if (record.containsKey(word[i]))
+            if (record.containsKey(kl.get(i)))
             {
-                record.put(word[i], record.get(word[i]) + 1);
+                record.put(kl.get(i), record.get(kl.get(i)) + 1);
             }
             else
             {
-                record.put(word[i], 1);
+                record.put(kl.get(i), 1);
             }
-            if (record.get(word[i]) > max)
+            if (record.get(kl.get(i)) > max)
             {
-                max = record.get(word[i]);
+                max = record.get(kl.get(i));
             }
         }
 
-        for (int i = 0; i < word.length; ++i)
+        for (int i = 0; i < kl.size(); ++i)
         {
-            if (record.get(word[i]) == max)
+            if (record.get(kl.get(i)) == max)
             {
-                maxx = word[i];
+                maxx = kl.get(i);
             }
-            else if (record.get(word[i]) < max)
+            else if (record.get(kl.get(i)) < max)
             {
-                if ((count) < record.get(word[i]))
+                if ((count) < record.get(kl.get(i)))
                 {
-                    result = word[i];
-                    count = record.get(word[i]);
+                    result = kl.get(i);
+                    count = record.get(kl.get(i));
                 }
             }
         }
 
-        for (int i = 0; i < word.length; ++i)
+        for (int i = 0; i < kl.size(); ++i)
         {
-            if (record.get(word[i]) < count)
+            if (record.get(kl.get(i)) < count)
             {
-                if (thirda < record.get(word[i]))
+                if (thirda < record.get(kl.get(i)))
                 {
-                    third = word[i];
-                    thirda = record.get(word[i]);
+                    third = kl.get(i);
+                    thirda = record.get(kl.get(i));
                 }
             }
         }
