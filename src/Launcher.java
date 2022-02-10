@@ -4,72 +4,69 @@ public class Launcher {
         else return Fibo(n-1) + Fibo(n-2);
     }
 
-    public static int max1(java.util.ArrayList<Integer> number){
-        int i_max = 0;
+    public static int first(java.util.ArrayList<Integer> number){
+        int res = 0;
         int max = number.get(0);
         for (int i = 1; i < number.size(); i++){
             if (number.get(i) > max){
                 max = number.get(i);
-                i_max = i;
+                res = i;
             }
         }
-        return i_max;
+        return res;
     }
 
-    public static int max2(java.util.ArrayList<Integer> number, int i_max1){
-        int i_max = 0;
-        if (i_max1 == 0)
-            i_max = 1;
-        int max = number.get(i_max);
-        for (int i = i_max + 1; i < number.size(); i++){
-            if (i == i_max1)
+    public static int second(java.util.ArrayList<Integer> number, int first){
+        int res = 0;
+        if (first == 0)
+            res = 1;
+        int max = number.get(res);
+        for (int i = res + 1; i < number.size(); i++){
+            if (i == first)
                 continue;
             if (number.get(i) > max){
                 max = number.get(i);
-                i_max = i;
+                res = i;
             }
         }
-        return i_max;
+        return res;
     }
 
-    public static int max3(java.util.ArrayList<Integer> number, int i_max1, int i_max2){
-        int i_max = 0;
-        while (i_max == i_max1 || i_max == i_max2)
-            i_max++;
-        int max = number.get(i_max);
-        for (int i = i_max + 1; i < number.size(); i++){
-            if (i == i_max1 || i == i_max2)
+    public static int third(java.util.ArrayList<Integer> number, int first, int second){
+        int res = 0;
+        while (res == first || res == second)
+            res++;
+        int max = number.get(res);
+        for (int i = res + 1; i < number.size(); i++){
+            if (i == first || i == second)
                 continue;
             if (number.get(i) > max){
                 max = number.get(i);
-                i_max = i;
+                res = i;
             }
         }
-        return i_max;
+        return res;
     }
 
-    public static String[] frequence(String file){
+    public static String[] freq(String file){
 
         file = file.replaceAll("[^a-zA-Z]", " ");
 
-        // All uppercase to lowercase
         file = file.toLowerCase();
 
-        // Get all the words
-        String[] base = file.split(" ");
+        String[] base_word = file.split(" ");
 
-        // Delete blank words
-        java.util.ArrayList<String> no_empty = new java.util.ArrayList<String>();
-        for (String word : base){
+        java.util.ArrayList<String> kl = new java.util.ArrayList<String>();
+        for (String word : base_word){
             if (!word.isBlank()){
-                no_empty.add(word);
+                kl.add(word);
             }
         }
 
-        java.util.Collections.sort(no_empty);
+        java.util.Collections.sort(kl);
 
         java.util.ArrayList<String> single = new java.util.ArrayList<String>();
-        for (String word : no_empty){
+        for (String word : kl){
             boolean in = false;
             for (String subword : single){
                 if (word.equals(subword)){
@@ -82,17 +79,17 @@ public class Launcher {
             }
         }
 
-        java.util.ArrayList<Integer> nbow = new java.util.ArrayList<Integer>();
+        java.util.ArrayList<Integer> maxarray = new java.util.ArrayList<Integer>();
         for (String word : single){
             int cpt = 0;
-            for (String subword : no_empty) {
+            for (String subword : kl) {
                 if (word.equals(subword)) {
                     cpt++;
                 }
                 else if (cpt > 0)
                     break;
             }
-            nbow.add(cpt);
+            maxarray.add(cpt);
         }
 
         if (single.size() <= 3){
@@ -102,9 +99,9 @@ public class Launcher {
             return array;
         }
 
-        int i1 = max1(nbow);
-        int i2 = max2(nbow, i1);
-        int i3 = max3(nbow, i1, i2);
+        int i1 = first(maxarray);
+        int i2 = second(maxarray, i1);
+        int i3 = third(maxarray, i1, i2);
 
         String[] array = {single.get(i1), single.get(i2), single.get(i3)};
         return array;
@@ -130,15 +127,15 @@ public class Launcher {
             else if (str.equals("freq")){
                 System.out.println("Veuillez entrer le chemin du fichier :");
                 String path_str = sc.nextLine();
-                java.nio.file.Path path = java.nio.file.Paths.get(path_str);
+                java.nio.file.Path paths = java.nio.file.Paths.get(path_str);
                 try {
-                    String file = java.nio.file.Files.readString(path);
-                    String[] most_freq = frequence(file);
-                    if (most_freq.length > 0)
+                    String path = java.nio.file.Files.readString(paths);
+                    String[] res = freq(path);
+                    if (res.length > 0)
                     {
-                        System.out.print(most_freq[0]);
-                        for (int i = 1; i < most_freq.length; i++)
-                            System.out.print(" " + most_freq[i]);
+                        System.out.print(res[0]);
+                        for (int i = 1; i < res.length; i++)
+                            System.out.print(" " + res[i]);
                         System.out.println();
                     }
                 }
