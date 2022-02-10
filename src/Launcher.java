@@ -4,124 +4,110 @@ public class Launcher {
         else return Fibo(n-1) + Fibo(n-2);
     }
 
-    public static int firsto(java.util.ArrayList<Integer> number){
-        int res = 0;
+    public static int max1(java.util.ArrayList<Integer> number){
+        int i_max = 0;
         int max = number.get(0);
         for (int i = 1; i < number.size(); i++){
             if (number.get(i) > max){
                 max = number.get(i);
-                res = i;
+                i_max = i;
             }
         }
-        return res;
+        return i_max;
     }
 
-    public static int secondo(java.util.ArrayList<Integer> number, int num){
-        int res = 0;
-        if (num == 0) {
-            res = 1;
-        }
-        int max = number.get(res);
-        for (int i = res + 1; i < number.size(); i++){
-            if (i == num)
+    public static int max2(java.util.ArrayList<Integer> number, int i_max1){
+        int i_max = 0;
+        if (i_max1 == 0)
+            i_max = 1;
+        int max = number.get(i_max);
+        for (int i = i_max + 1; i < number.size(); i++){
+            if (i == i_max1)
                 continue;
             if (number.get(i) > max){
                 max = number.get(i);
-                res = i;
+                i_max = i;
             }
         }
-        return res;
+        return i_max;
     }
 
-    public static int thirdo(java.util.ArrayList<Integer> number, int num1, int num2){
-        int res = 0;
-        while (res == num1 || res == num2) {
-            res++;
-        }
-        int max = number.get(res);
-        for (int i = res + 1; i < number.size(); i++){
-            if (i == num1 || i == num2) {
+    public static int max3(java.util.ArrayList<Integer> number, int i_max1, int i_max2){
+        int i_max = 0;
+        while (i_max == i_max1 || i_max == i_max2)
+            i_max++;
+        int max = number.get(i_max);
+        for (int i = i_max + 1; i < number.size(); i++){
+            if (i == i_max1 || i == i_max2)
                 continue;
-            }
             if (number.get(i) > max){
                 max = number.get(i);
-                res = i;
+                i_max = i;
             }
         }
-        return res;
+        return i_max;
     }
 
+    public static String[] frequence(String file){
 
-    public static String[] Freq(String str) {
-        java.nio.file.Path path = java.nio.file.Paths.get(str);
-        String contenu = "";
-        try {
-            contenu = java.nio.file.Files.readString(path);
-        }
-        catch (Exception e) {
-            System.out.println("Unreadable file: " + e);
-        }
+        file = file.replaceAll("[^a-zA-Z]", " ");
 
-        contenu = contenu.replaceAll("[^a-zA-Z]", " ");
-        contenu = contenu.toLowerCase();
-        String[] words = contenu.split(" ");
+        // All uppercase to lowercase
+        file = file.toLowerCase();
 
-        java.util.ArrayList<String> kl = new java.util.ArrayList<String>();
+        // Get all the words
+        String[] base = file.split(" ");
 
-
-        for (String word : words)
-        {
-            if (!word.isBlank())
-            {
-                kl.add(word);
+        // Delete blank words
+        java.util.ArrayList<String> no_empty = new java.util.ArrayList<String>();
+        for (String word : base){
+            if (!word.isBlank()){
+                no_empty.add(word);
             }
         }
 
-        java.util.Collections.sort(kl);
+        java.util.Collections.sort(no_empty);
 
-        java.util.ArrayList<String> strtemp = new java.util.ArrayList<String>();
-        for (String word : kl){
-            boolean boool = false;
-            for (String singleword : strtemp){
-                if (word.equals(singleword)){
-                    boool = true;
+        java.util.ArrayList<String> single = new java.util.ArrayList<String>();
+        for (String word : no_empty){
+            boolean in = false;
+            for (String subword : single){
+                if (word.equals(subword)){
+                    in = true;
                     break;
                 }
             }
-            if (!boool){
-                strtemp.add(word);
+            if (!in){
+                single.add(word);
             }
         }
 
-        java.util.ArrayList<Integer> res = new java.util.ArrayList<Integer>();
-
-        for (String word : strtemp){
+        java.util.ArrayList<Integer> nbow = new java.util.ArrayList<Integer>();
+        for (String word : single){
             int cpt = 0;
-            for (String subword : kl) {
+            for (String subword : no_empty) {
                 if (word.equals(subword)) {
                     cpt++;
                 }
                 else if (cpt > 0)
                     break;
             }
-            res.add(cpt);
+            nbow.add(cpt);
         }
 
-        if (strtemp.size() <= 3){
-            String result[] = new String[strtemp.size()];
-            for (int i = 0; i < strtemp.size(); i++) {
-                result[i] = strtemp.get(i);
-            }
-            return result;
+        if (single.size() <= 3){
+            String array[] = new String[single.size()];
+            for (int i = 0; i < single.size(); i++)
+                array[i] = single.get(i);
+            return array;
         }
 
-        int first = firsto(res);
-        int second = secondo(res, first);
-        int third = thirdo(res, first, second);
+        int i1 = max1(nbow);
+        int i2 = max2(nbow, i1);
+        int i3 = max3(nbow, i1, i2);
 
-        String[] result = {strtemp.get(first), strtemp.get(second), strtemp.get(third)};
-        return result;
-
+        String[] array = {single.get(i1), single.get(i2), single.get(i3)};
+        return array;
     }
 
     public static void main(String[] args) {
@@ -142,17 +128,22 @@ public class Launcher {
                 str = sc.nextLine();
             }
             else if (str.equals("freq")){
-                System.out.println("Veuillez indiquer le chemin du fichier :");
-                String path = sc.nextLine();
-                sc.nextLine();
-                String[] res = Freq(path);
-                if (res.length > 0)
-                {
-                    System.out.print(res[0]);
-                    for (int i = 1; i < res.length; i++) {
-                        System.out.print(" " + res[i]);
+                System.out.println("Veuillez entrer le chemin du fichier :");
+                String path_str = sc.nextLine();
+                java.nio.file.Path path = java.nio.file.Paths.get(path_str);
+                try {
+                    String file = java.nio.file.Files.readString(path);
+                    String[] most_freq = frequence(file);
+                    if (most_freq.length > 0)
+                    {
+                        System.out.print(most_freq[0]);
+                        for (int i = 1; i < most_freq.length; i++)
+                            System.out.print(" " + most_freq[i]);
+                        System.out.println();
                     }
-                    System.out.println();
+                }
+                catch (java.io.IOException e){
+                    System.out.println("Unreadable file: " + e);
                 }
 
                 str = sc.nextLine();
