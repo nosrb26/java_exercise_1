@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.HashMap;
 
 
+
 public class Launcher {
     public static int Fibo(int n) {
         if (n <= 1) return n;
@@ -90,10 +91,10 @@ public class Launcher {
 
     public static void main(String[] args) {
         System.out.println("Welcome");
-        java.util.Scanner var = new java.util.Scanner(System.in);
-        Scanner sc = new Scanner(System.in);
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+
         String str = sc.nextLine();
-        do {
+        while (!str.equals("quit")) {
             if (!str.equals("fibo") && !str.equals("freq")) {
                 System.out.println("Unknown Command");
                 str = sc.nextLine();
@@ -113,6 +114,7 @@ public class Launcher {
                 str = sc.nextLine();
             }
         }
-        while (!str.equals("quit"));
+
+
     }
 }
