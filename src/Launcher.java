@@ -149,8 +149,9 @@ public class Launcher {
                 if (res.length > 0)
                 {
                     System.out.print(res[0]);
-                    for (int i = 1; i < res.length; i++)
+                    for (int i = 1; i < res.length; i++) {
                         System.out.print(" " + res[i]);
+                    }
                     System.out.println();
                 }
 
