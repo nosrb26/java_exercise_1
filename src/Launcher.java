@@ -1,5 +1,9 @@
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.Locale;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 
 
@@ -22,7 +26,8 @@ public class Launcher {
 
         HashMap < String, Integer > record = new HashMap < String, Integer > ();
 
-        contenu = contenu.replaceAll("[^a-zA-Z ]", " ");
+        contenu = contenu.replaceAll("[^a-zA-Z]", " ");
+        contenu = contenu.toLowerCase();
         String[] word = contenu.split(" ");
 
         java.util.ArrayList<String> kl = new java.util.ArrayList<String>();
@@ -35,6 +40,8 @@ public class Launcher {
                 kl.add(word[i]);
             }
         }
+
+        java.util.Collections.sort(kl);
 
         String result = "";
         int max = 0;
