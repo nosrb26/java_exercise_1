@@ -1,109 +1,126 @@
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.HashMap;
-import java.util.Locale;
-import java.io.IOException;
-import java.nio.file.Paths;
-
-
-
 public class Launcher {
     public static int Fibo(int n) {
         if (n <= 1) return n;
         else return Fibo(n-1) + Fibo(n-2);
     }
 
-    public static void Freq(String str) {
+    public static int firsto(java.util.ArrayList<Integer> number){
+        int res = 0;
+        int max = number.get(0);
+        for (int i = 1; i < number.size(); i++){
+            if (number.get(i) > max){
+                max = number.get(i);
+                res = i;
+            }
+        }
+        return res;
+    }
+
+    public static int secondo(java.util.ArrayList<Integer> number, int num){
+        int res = 0;
+        if (num == 0) {
+            res = 1;
+        }
+        int max = number.get(res);
+        for (int i = res + 1; i < number.size(); i++){
+            if (i == num)
+                continue;
+            if (number.get(i) > max){
+                max = number.get(i);
+                res = i;
+            }
+        }
+        return res;
+    }
+
+    public static int thirdo(java.util.ArrayList<Integer> number, int num1, int num2){
+        int res = 0;
+        while (res == num1 || res == num2) {
+            res++;
+        }
+        int max = number.get(res);
+        for (int i = res + 1; i < number.size(); i++){
+            if (i == num1 || i == num2) {
+                continue;
+            }
+            if (number.get(i) > max){
+                max = number.get(i);
+                res = i;
+            }
+        }
+        return res;
+    }
+
+
+    public static String[] Freq(String str) {
         java.nio.file.Path path = java.nio.file.Paths.get(str);
         String contenu = "";
         try {
             contenu = java.nio.file.Files.readString(path);
-
         }
         catch (Exception e) {
             System.out.println("Unreadable file: " + e);
         }
 
-        HashMap < String, Integer > record = new HashMap < String, Integer > ();
-
         contenu = contenu.replaceAll("[^a-zA-Z]", " ");
         contenu = contenu.toLowerCase();
-        String[] word = contenu.split(" ");
+        String[] words = contenu.split(" ");
 
         java.util.ArrayList<String> kl = new java.util.ArrayList<String>();
 
 
-        for (int i = 0; i < word.length; ++i)
+        for (int i = 0; i < words.length; ++i)
         {
-            if (!word[i].isBlank())
+            if (!words[i].isBlank())
             {
-                kl.add(word[i]);
+                kl.add(words[i]);
             }
         }
 
         java.util.Collections.sort(kl);
 
-        String result = "";
-        int max = 0;
-        int count = 0;
-        int thirda = 0;
-        String maxx = "";
-        String third = "";
-
-        for (int i = 0; i < kl.size(); ++i)
-        {
-            if (record.containsKey(kl.get(i)))
-            {
-                record.put(kl.get(i), record.get(kl.get(i)) + 1);
-            }
-            else
-            {
-                record.put(kl.get(i), 1);
-            }
-            if (record.get(kl.get(i)) > max)
-            {
-                max = record.get(kl.get(i));
-            }
-        }
-
-        for (int i = 0; i < kl.size(); ++i)
-        {
-            if (record.get(kl.get(i)) == max)
-            {
-                maxx = kl.get(i);
-            }
-            else if (record.get(kl.get(i)) < max)
-            {
-                if ((count) < record.get(kl.get(i)))
-                {
-                    result = kl.get(i);
-                    count = record.get(kl.get(i));
+        java.util.ArrayList<String> strtemp = new java.util.ArrayList<String>();
+        for (String word : kl){
+            boolean boool = false;
+            for (String singleword : strtemp){
+                if (word.equals(singleword)){
+                    boool = true;
+                    break;
                 }
             }
-        }
-
-        for (int i = 0; i < kl.size(); ++i)
-        {
-            if (record.get(kl.get(i)) < count)
-            {
-                if (thirda < record.get(kl.get(i)))
-                {
-                    third = kl.get(i);
-                    thirda = record.get(kl.get(i));
-                }
+            if (!boool){
+                strtemp.add(word);
             }
         }
 
-        if (count == 0)
-        {
-            return;
+        java.util.ArrayList<Integer> res = new java.util.ArrayList<Integer>();
+
+        for (String word : strtemp){
+            int cpt = 0;
+            for (String subword : kl) {
+                if (word.equals(subword)) {
+                    cpt++;
+                }
+                else if (cpt > 0)
+                    break;
+            }
+            res.add(cpt);
         }
-        else
-        {
-            result += " " + maxx;
-            third += " " + result;
-            System.out.println(third);
+
+        if (strtemp.size() <= 3){
+            String result[] = new String[strtemp.size()];
+            for (int i = 0; i < strtemp.size(); i++) {
+                result[i] = strtemp.get(i);
+            }
+            return result;
         }
+
+        int first = firsto(res);
+        int second = secondo(res, first);
+        int third = thirdo(res, first, second);
+
+        String[] array = {strtemp.get(first), strtemp.get(second), strtemp.get(third)};
+        return array;
 
     }
 
@@ -128,7 +145,15 @@ public class Launcher {
                 System.out.println("Veuillez indiquer le chemin du fichier :");
                 String path = sc.nextLine();
                 sc.nextLine();
-                Freq(path);
+                String[] res = Freq(path);
+                if (res.length > 0)
+                {
+                    System.out.print(res[0]);
+                    for (int i = 1; i < res.length; i++)
+                        System.out.print(" " + res[i]);
+                    System.out.println();
+                }
+
                 str = sc.nextLine();
             }
         }
