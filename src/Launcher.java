@@ -1,30 +1,29 @@
+import java.util.*;
+
 public class Launcher {
     public static void main(String[] args) {
-
         System.out.println("Welcome");
-        java.util.Scanner scan = new java.util.Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        List<Command> command = new ArrayList<Command>();
+        command.add(new Fibo());
+        command.add(new Freq());
+        command.add(new Quit());
+        command.add(new Predict());
 
-        java.util.List<Command> cmd = new java.util.ArrayList<>();
-        cmd.add(new Quit());
-        cmd.add(new Fibo());
-        cmd.add(new Freq());
-        cmd.add(new Predict());
-
-        boolean refact = true;
-        while (refact){
-            String entry = scan.nextLine();
-
-            boolean boool = false;
-            for (Command command : cmd){
-                if (command.name().equals(entry)) {
-                    boool = true;
-                    if (command.run(entry)) {
-                        refact = false;
-                    }
-                    break;
+        Boolean boole1 = false;
+        Boolean boole2 = true;
+        while (boole2)
+        {
+            System.out.println("Veuillez entrer une commande :");
+            boole1 = false;
+            String str = sc.nextLine();
+            for (Command com: command ){
+                if (str.equals(com.name())){
+                    boole2 = com.run(sc);
+                    boole1 = true;
                 }
             }
-            if (!boool) {
+            if (!boole1) {
                 System.out.println("Unknown command");
             }
         }

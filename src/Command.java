@@ -1,4 +1,5 @@
+import java.util.Scanner;
 public interface Command {
     String name();
-    boolean run(String entry);
+    boolean run(Scanner console);
 }

@@ -1,110 +1,85 @@
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class Predict implements Command{
+public class Predict implements Command {
 
-    public String name(){
+    public static Map<String, String> predict(String str) {
+        str = str.replaceAll("[^A-Za-z0-9]+", " ").toLowerCase(Locale.ROOT);
+        List<String> arr = Arrays.asList(str.split(" "));
+
+        List<String> uniq = arr.stream().distinct().collect(Collectors.toList());
+
+        Map<String, String> freqwords = new Hashtable<>();
+
+        for (int index = 0; index < uniq.size(); index++) {
+
+            List<String> list = new ArrayList<>();
+            for (int w = 0; w < arr.size() - 1; w++) {
+                if (arr.get(w).equals(uniq.get(index))) {
+                    list.add(arr.get(w + 1));
+                }
+            }
+
+            List<String> li = list.stream().distinct().collect(Collectors.toList());
+            var mapss = list.stream()
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+            long max = 0;
+            String st = "";
+            for (String s: li) {
+                if (max < mapss.get(s)){
+                    st = s;
+                    max= mapss.get(s);
+                }
+            }
+
+            freqwords.put(uniq.get(index), st);
+        }
+
+        return freqwords;
+    }
+
+    public static void freqWordas(Scanner console, Map<String, String> freq){
+        System.out.printf("Entrez un mot :");
+        String word = console.nextLine().toLowerCase();
+        System.out.printf(word + " ");
+        if (freq.containsKey(word)){
+            for (int i = 0; i < 19; i++){
+                System.out.printf(freq.get(word) + " ");
+                word = freq.get(word).toString();
+            }
+            System.out.printf("\n");
+        }
+        else {
+            System.out.printf("Le mot n'existe pas.");
+        }
+    }
+
+    @Override
+    public String name() {
         return "predict";
     }
 
-    int maxindex(int[] count) {
-        if (count.length > 0) {
-            int res = 0;
-            int max = count[0];
-            for (int i = 0; i < count.length; i++) {
-                if (count[i] > max) {
-                    res = i;
-                    max = count[i];
-                }
-            }
-            return res;
-        }
-        return -1;
-    }
-
-    public boolean run(String entry) {
-        java.util.Scanner scan = new java.util.Scanner(System.in);
-        System.out.println("Veuillez entrer le chemin du fichier :");
-        String path_str = scan.nextLine();
-        java.nio.file.Path path = java.nio.file.Paths.get(path_str);
+    @Override
+    public boolean run(Scanner console) {
+        System.out.printf("Entrez le chemin :");
+        String path = console.nextLine();
+        Path filepath = Paths.get(path);
 
         try {
-            String file = java.nio.file.Files.readString(path);
-            file = file.replaceAll("[^a-zA-Z]", " ");
-            file = file.toLowerCase();
-            String[] base = file.split(" +");
-
-            java.util.ArrayList<String> woblk = new java.util.ArrayList<String>();
-            for (String word : base) {
-                woblk.add(word);
-            }
-            java.util.ArrayList<String> uniqword = new java.util.ArrayList<String>();
-            for (String word : woblk){
-                boolean in = false;
-                for (String subword : uniqword){
-                    if (word.equals(subword)){
-                        in = true;
-                        break;
-                    }
-                }
-                if (!in){
-                    uniqword.add(word);
-                }
-            }
-
-            java.util.ArrayList<String> getable = new ArrayList<>();
-            for (String word : uniqword){
-                int[] count = new int[uniqword.size()];
-                for (int i = 0; i < base.length - 1; i++) {
-                    if (word.equals(base[i])) {
-                        String next = base[i + 1];
-                        for (int j = 0 ; j < uniqword.size(); j++){
-                            if (next.equals(uniqword.get(j))) {
-                                count[j] += 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-                int index = maxindex(count);
-                getable.add(uniqword.get(index));
-            }
-
-            System.out.print("Veuillez entrer un mot :");
-            String str = scan.nextLine();
-            str = str.toLowerCase();
-
-            boolean found = false;
-            for (String w : uniqword) {
-                if (w.equals(str)) {
-                    found = true;
-                    int index = 0;
-                    while (!uniqword.get(index).equals(str)) {
-                        index++;
-                    }
-
-                    System.out.print(getable.get(index));
-                    str = getable.get(index);
-                    for (int i = 0; i < 19; i++) {
-                        index = 0;
-                        while (!uniqword.get(index).equals(str)) {
-                            index++;
-                        }
-                        System.out.print(" " + getable.get(index));
-                        str = getable.get(index);
-                    }
-                    System.out.println();
-                    break;
-                }
-            }
-
-            if (!found) {
-                System.out.println("Le mot indiqué n'est pas dans le texte donné");
-            }
+            String content = Files.readString(filepath);
+            Map<String, String> freq = predict(content);
+            freqWordas(console, freq);
         }
-
-        catch (java.io.IOException e){
-            System.out.println("Unreadable file: " + e);
+        catch (IOException e) {
+            System.out.printf("Unreadable file: ");
+            e.printStackTrace();
         }
-        return false;
+        return true;
     }
 }

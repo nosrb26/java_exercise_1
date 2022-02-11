@@ -1,6 +1,40 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class Freq implements Command {
-    public String name(){
+
+    @Override
+    public String name() {
         return "freq";
+    }
+
+    @Override
+    public boolean run(Scanner console) {
+        System.out.printf("Veuillez entrer le chemin du fichier :");
+        String path_str = console.nextLine();
+        Path path = Paths.get(path_str);
+
+        try {
+            String file = java.nio.file.Files.readString(path);
+            String[] res = freq(file);
+            if (res.length > 0)
+            {
+                System.out.print(res[0]);
+                for (int i = 1; i < res.length; i++) {
+                    System.out.print(" " + res[i]);
+                }
+                System.out.println();
+            }
+        }
+        catch (java.io.IOException e){
+            System.out.println("Unreadable file: " + e);
+        }
+
+        return false;
     }
 
     int first(java.util.ArrayList<Integer> number){
@@ -106,31 +140,6 @@ public class Freq implements Command {
         return array;
     }
 
-    public boolean run(String entry) {
-        java.util.Scanner scan = new java.util.Scanner(System.in);
 
-        System.out.println("Veuillez entrer le chemin du fichier :");
-        String path_str = scan.nextLine();
-
-        java.nio.file.Path path = java.nio.file.Paths.get(path_str);
-
-        try {
-            String file = java.nio.file.Files.readString(path);
-            String[] res = freq(file);
-            if (res.length > 0)
-            {
-                System.out.print(res[0]);
-                for (int i = 1; i < res.length; i++) {
-                    System.out.print(" " + res[i]);
-                }
-                System.out.println();
-            }
-        }
-        catch (java.io.IOException e){
-            System.out.println("Unreadable file: " + e);
-        }
-
-        return false;
-    }
 
 }

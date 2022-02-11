@@ -1,9 +1,13 @@
-public class Quit implements Command {
-    public String name(){
+import java.util.Scanner;
+
+public class Quit implements Command{
+    @Override
+    public String name() {
         return "quit";
     }
 
-    public boolean run(String entry) {
-        return true;
+    @Override
+    public boolean run(Scanner console) {
+        return false;
     }
 }
